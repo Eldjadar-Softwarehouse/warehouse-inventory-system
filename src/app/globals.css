@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-[22px] lg:text-[34px] xl:text-[34px] 2xl:text-[34px] font-bold
+  }
+  h5 {
+    @apply text-[13px] lg:text-[17px] xl:text-[17px] 2xl:text-[17px] font-semibold
+  }
+  h6 {
+    @apply text-[12px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] font-light
+  }
+  a {
+    @apply text-[12px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] text-sage font-bold
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-synthesis: none;
+}
