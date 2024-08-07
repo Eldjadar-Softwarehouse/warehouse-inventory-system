@@ -1,63 +1,55 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/lib/hooks";
+import PinModal from "@/components/pinModal";
+import OtpModal from "@/components/otpModal";
+import GAuthModal from "@/components/gAuthModal";
+import SetupGAuthModal from "@/components/gAuthModalSetup";
 
-const securityComponents = {
-  PIN: (
-    <div className="flex justify-between border border-gray-4 py-3 px-6 rounded-md">
-      <div className="flex gap-3">
-        <img src="/icons/pin.svg" alt="pin" />
-        <div className="flex flex-col gap-1">
-          <h5>PIN</h5>
-          <h6>Protect your account with PIN</h6>
-        </div>
-      </div>
-      <div className="flex items-center justify-center">
-        <img src="/icons/arrow-right-line.svg" alt="arrow-right-line" />
-      </div>
-    </div>
-  ),
-  OTP: (
-    <div className="flex justify-between border border-gray-4 py-3 px-6 rounded-md">
-      <div className="flex gap-3">
-        <img src="/icons/otp.svg" alt="otp" />
-        <div className="flex flex-col gap-1">
-          <h5>OTP</h5>
-          <h6>Protect your account with email 2FA</h6>
-        </div>
-      </div>
-      <div className="flex items-center justify-center">
-        <img src="/icons/arrow-right-line.svg" alt="arrow-right-line" />
-      </div>
-    </div>
-  ),
-  GAuth: (
-    <div className="flex justify-between border border-gray-4 py-3 px-6 rounded-md">
-      <div className="flex gap-3">
-        <img src="/icons/gauth.svg" alt="gauth" />
-        <div className="flex flex-col gap-1">
-          <h5>Authenticator</h5>
-          <h6>Protect your account with Google Authenticator</h6>
-        </div>
-      </div>
-      <div className="flex items-center justify-center">
-        <img src="/icons/arrow-right-line.svg" alt="arrow-right-line" />
-      </div>
-    </div>
-  ),
+const securityComponents: Record<string, string> = {
+  PIN: "PinModal",
+  OTP: "OtpModal",
+  GAuth: "GAuthModal",
 };
 
-const DashboardPage = () => {
+const AuthPage: React.FC = () => {
   const router = useRouter();
   const userData = useAppSelector((state) => state.user);
+
+  const [modalOpen, setModalOpen] = useState<{
+    PinModal: boolean;
+    OtpModal: boolean;
+    GAuthModal: boolean;
+  }>({
+    PinModal: false,
+    OtpModal: false,
+    GAuthModal: false,
+  });
+  const [setupModalOpen, setSetupModalOpen] = useState(false);
 
   useEffect(() => {
     if (!userData.isSignin) {
       router.push("/login");
     }
-  }, [userData]);
+  }, [userData, router]);
+
+  const handleOpenModal = (modalName: string) => {
+    setModalOpen((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const handleCloseModal = (modalName: string) => {
+    setModalOpen((prev) => ({ ...prev, [modalName]: false }));
+  };
+
+  const handleSetupModalOpen = () => {
+    setSetupModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSetupModalOpen(false);
+  };
 
   return (
     <>
@@ -75,9 +67,56 @@ const DashboardPage = () => {
               <h1>Set up Google Authenticator for enhanced security.</h1>
             </div>
             <div className="flex flex-col gap-4 ">
-              {userData.security.map((security) => (
-                <div key={security}>{securityComponents[security]}</div>
-              ))}
+              {userData.security.map((security: string) => {
+                const Component = securityComponents[security];
+                return (
+                  <div
+                    key={security}
+                    className="flex justify-between border border-gray-1 py-3 px-6 rounded-lg hover:cursor-pointer hover:bg-gray-4 hover:bg-opacity-50"
+                    onClick={() => handleOpenModal(Component)}
+                  >
+                    <div className="flex gap-3">
+                      <img
+                        src={`/icons/${security.toLowerCase()}.svg`}
+                        alt={security.toLowerCase()}
+                      />
+                      <div className="flex flex-col gap-1">
+                        <h5>{security}</h5>
+                        <h6>Protect your account with {security}</h6>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        src="/icons/arrow-right-fill.svg"
+                        alt="arrow-right-fill"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {userData.isSetup && (
+                <>
+                  <div
+                    key="setupGAuth"
+                    className="flex justify-between border border-gray-1 py-3 px-6 rounded-lg hover:cursor-pointer hover:bg-gray-4 hover:bg-opacity-50"
+                    onClick={() => handleSetupModalOpen()}
+                  >
+                    <div className="flex gap-3">
+                      <img src={`/icons/gauth.svg`} alt="gauth" />
+                      <div className="flex flex-col gap-1">
+                        <h5>Authenticator</h5>
+                        <h6>Protect your account with Authenticator</h6>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <img
+                        src="/icons/arrow-right-fill.svg"
+                        alt="arrow-right-fill"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="flex h-[147px]" />
@@ -90,8 +129,22 @@ const DashboardPage = () => {
           />
         </div>
       </div>
+      <PinModal
+        isOpen={modalOpen.PinModal}
+        onClose={() => handleCloseModal("PinModal")}
+      />
+      <OtpModal
+        isOpen={modalOpen.OtpModal}
+        onClose={() => handleCloseModal("OtpModal")}
+      />
+      <GAuthModal
+        isOpen={modalOpen.GAuthModal}
+        onClose={() => handleCloseModal("GAuthModal")}
+      />
+      <SetupGAuthModal isOpen={setupModalOpen} onClose={closeModal} />
+
     </>
   );
 };
 
-export default DashboardPage;
+export default AuthPage;

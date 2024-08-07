@@ -3,6 +3,16 @@ export interface SignInPayload {
   password: string;
 }
 
+export interface ForgotPasswordPayload {
+  username: string;
+}
+
+export interface NewPasswordPayload {
+  password: string;
+  cpassword: string;
+  code: string;
+}
+
 export interface HeadersPayload {
   SIGNATURE: string;
   SECRET: string;
