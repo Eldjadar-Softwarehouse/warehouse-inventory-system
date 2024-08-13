@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { signIn } from "@/lib/user/userSlice";
-import UserSuspendedModal from "@/components/userSuspendedModal";
+import UserSuspendedModal from "@/components/auth/userSuspendedModal";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -121,7 +121,7 @@ const LoginPage = () => {
               </button>
             </div>
             <div className="flex mb-4 gap-4">
-              {userData.isError && errorMessage !== ""  && (
+              {userData.isError && errorMessage !== "" && (
                 <>
                   <img src="/icons/info-error.svg" alt="info-error" />
                   <h6 className="text-red">{errorMessage}</h6>
@@ -140,7 +140,11 @@ const LoginPage = () => {
                 className="bg-sage w-[105px] h-[40px] text-white py-2 px-4 rounded flex items-center justify-center hover:bg-blue-hv focus:outline-none focus:shadow-outline"
               >
                 {userData.isLoading ? (
-                  <p>LOADING</p>
+                  <img
+                    className="w-8 h-8"
+                    src="/images/loading.gif"
+                    alt="loading"
+                  />
                 ) : (
                   <img
                     src="/icons/arrow-right-line.svg"

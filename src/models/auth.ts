@@ -13,6 +13,11 @@ export interface NewPasswordPayload {
   code: string;
 }
 
+export interface NewGAuthSetupPayload {
+  tempToken: string;
+  gcode: string;
+}
+
 export interface HeadersPayload {
   SIGNATURE: string;
   SECRET: string;

@@ -1,9 +1,11 @@
 import moment from "moment";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { setCookie } from "cookies-next";
 import {
   SignInPayload,
   ForgotPasswordPayload,
   NewPasswordPayload,
+  NewGAuthSetupPayload,
 } from "@/models/auth";
 import { getHeaders } from "@/utils/headerPayload";
 
@@ -11,7 +13,7 @@ export const signIn = createAsyncThunk(
   "signIn",
   async ({ username, password }: SignInPayload) => {
     const headers = await getHeaders();
-    const signinTime = moment().format("DD-MM-YYYY HH:mm:ss");
+    const timestamps = moment().format("DD-MM-YYYY HH:mm:ss");
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/v01/signin`,
@@ -24,7 +26,7 @@ export const signIn = createAsyncThunk(
         body: JSON.stringify({
           username,
           password,
-          timestamps: signinTime,
+          timestamps: timestamps,
         }),
       }
     );
@@ -39,7 +41,7 @@ export const forgotPassword = createAsyncThunk(
   "forgotPassword",
   async ({ username }: ForgotPasswordPayload) => {
     const headers = await getHeaders();
-    const signinTime = moment().format("DD-MM-YYYY HH:mm:ss");
+    const timestamps = moment().format("DD-MM-YYYY HH:mm:ss");
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/v01/forgot-password`,
@@ -51,7 +53,7 @@ export const forgotPassword = createAsyncThunk(
         },
         body: JSON.stringify({
           username,
-          timestamps: signinTime,
+          timestamps: timestamps,
         }),
       }
     );
@@ -66,7 +68,7 @@ export const newPassword = createAsyncThunk(
   "newPassword",
   async ({ password, cpassword, code }: NewPasswordPayload) => {
     const headers = await getHeaders();
-    const signinTime = moment().format("DD-MM-YYYY HH:mm:ss");
+    const timestamps = moment().format("DD-MM-YYYY HH:mm:ss");
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/v01/new-password`,
@@ -80,7 +82,35 @@ export const newPassword = createAsyncThunk(
           password,
           cpassword,
           code,
-          timestamps: signinTime,
+          timestamps: timestamps,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  }
+);
+
+export const newGAuthSetup = createAsyncThunk(
+  "newGAuthSetup",
+  async ({ tempToken, gcode }: NewGAuthSetupPayload) => {
+    const headers = await getHeaders();
+    const timestamps = moment().format("DD-MM-YYYY HH:mm:ss");
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/v01/new-gauth-setup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...headers,
+          Authorization: `Bearer ${tempToken}`,
+        },
+        body: JSON.stringify({
+          gcode,
+          timestamps: timestamps,
         }),
       }
     );
@@ -104,10 +134,15 @@ export const userSlice = createSlice({
     setupUrl: "",
     tempToken: "",
     token: "",
+    menu: [],
   },
   reducers: {
     signedOut: (state) => {
       state.isSignin = false;
+    },
+    resetErrorState: (state) => {
+      state.isError = false;
+      state.errorMessage = "";
     },
   },
   extraReducers: (builder) => {
@@ -121,26 +156,28 @@ export const userSlice = createSlice({
       state.isError = false;
 
       const payloadStatus = action.payload.status.status;
-      const hasSecurityChecklist =
-        "securitychecklist" in action.payload.support;
-      const hasSecuritySetup = "securitysetup" in action.payload.support;
+      const support = action.payload.support;
+
+      const hasSecurityChecklist = support && "securitychecklist" in support;
+      const hasSecuritySetup = support && "securitysetup" in support;
 
       if (payloadStatus === 1 && hasSecurityChecklist && !hasSecuritySetup) {
-        state.security = action.payload.support.securitychecklist.security.map(
+        state.security = support!.securitychecklist.security.map(
           (sec: any) => sec.ucs_name
         );
-        state.tempToken = action.payload.support.temptoken;
+        state.tempToken = support!.temptoken;
         state.isSignin = true;
       } else if (
         payloadStatus === 1 &&
         !hasSecurityChecklist &&
         hasSecuritySetup
       ) {
-        state.setupUrl = action.payload.support.securitysetup.dataurl;
-        state.tempToken = action.payload.support.temptoken;
+        state.setupUrl = support!.securitysetup.dataurl;
+        state.tempToken = support!.temptoken;
         state.isSignin = true;
         state.isSetup = true;
       } else {
+        console.log("error");
         state.isError = true;
         state.errorMessage = action.payload.status.message[0].errormessage;
       }
@@ -181,9 +218,50 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
     });
+
+    // New GAuthSetup
+    builder.addCase(newGAuthSetup.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(newGAuthSetup.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+
+      if (action.payload.status.status === 1) {
+        console.log("success");
+
+        setCookie("token", action.payload.support.token);
+
+        state.menu = action.payload.data.map((item: any) => {
+          return {
+            group: item.group,
+            extended: item.extended,
+            feature: item.feature.map((featureItem: any) => {
+              return {
+                subMenu: featureItem.sub_menu,
+                subMenuRoute: featureItem.sub_menu_route,
+                extended: featureItem.extended,
+                feature: featureItem.feature.map((subFeature: any) => ({
+                  subMenu: subFeature.sub_menu,
+                  subMenuRoute: subFeature.sub_menu_route,
+                })),
+              };
+            }),
+          };
+        });
+      } else if (action.payload.status.status === 0) {
+        state.isError = true;
+        state.errorMessage = action.payload.status.message[0].errormessage;
+      }
+    });
+    builder.addCase(newGAuthSetup.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
   },
 });
 
-export const { signedOut } = userSlice.actions;
+export const { signedOut, resetErrorState } = userSlice.actions;
 
 export default userSlice.reducer;

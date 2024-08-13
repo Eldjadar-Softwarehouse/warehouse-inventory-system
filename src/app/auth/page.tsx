@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/lib/hooks";
-import PinModal from "@/components/pinModal";
-import OtpModal from "@/components/otpModal";
-import GAuthModal from "@/components/gAuthModal";
-import SetupGAuthModal from "@/components/gAuthModalSetup";
+import PinModal from "@/components/auth/pinModal";
+import OtpModal from "@/components/auth/otpModal";
+import GAuthModal from "@/components/auth/gAuthModal";
+import GAuthSetupModal from "@/components/auth/gAuthSetupModal";
 
 const securityComponents: Record<string, string> = {
   PIN: "PinModal",
@@ -141,7 +141,7 @@ const AuthPage: React.FC = () => {
         isOpen={modalOpen.GAuthModal}
         onClose={() => handleCloseModal("GAuthModal")}
       />
-      <SetupGAuthModal isOpen={setupModalOpen} onClose={closeModal} />
+      <GAuthSetupModal isOpen={setupModalOpen} onClose={closeModal} />
 
     </>
   );

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { forgotPassword } from "@/lib/user/userSlice";
-import ForgotPasswordModal from "@/components/forgotPasswordModal";
+import { forgotPassword, resetErrorState } from "@/lib/user/userSlice";
+import ForgotPasswordModal from "@/components/auth/forgotPasswordModal";
 
 const ForgotPasswordPage = () => {
   const router = useRouter();
@@ -38,6 +38,10 @@ const ForgotPasswordPage = () => {
     setIsModalOpen(false);
     router.push("/login");
   };
+
+  useEffect(() => {
+    dispatch(resetErrorState());
+  }, [dispatch]);
 
   useEffect(() => {
     if (userData.isError) {
@@ -89,7 +93,11 @@ const ForgotPasswordPage = () => {
                 className="bg-sage w-[105px] h-[40px] text-white py-2 px-4 rounded flex items-center justify-center hover:bg-blue-hv focus:outline-none focus:shadow-outline"
               >
                 {userData.isLoading ? (
-                  <p>LOADING</p>
+                  <img
+                    className="w-8 h-8"
+                    src="/images/loading.gif"
+                    alt="loading"
+                  />
                 ) : (
                   <img
                     src="/icons/arrow-right-line.svg"
