@@ -1,31 +1,29 @@
 import React from 'react'
-import StoreProvider from '@/lib/StoreProvider'
 import Sidebar from '@/components/sidebar/sidebar'
-import { Inter } from 'next/font/google';
-
-const roboto = Inter({
-    subsets: ["latin"],
-});
+import Submenu from '@/components/home/submenu';
+import Header from '@/components/home/header';
 
 export default function Layout({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    return (
-      <StoreProvider >
-        <div className="flex">
-            <div className="flex-1/4 w-64">
-                <Sidebar />
-            </div>
-            <div className="flex-1/4 w-64">
 
-            </div>
-            <div className="flex-2/4 w-2/4">
-                {children}
-            </div>
+    return (
+      <div>
+        <div className="fixed w-full h-screen justify-between bg-[url('/images/bg-login.png')] bg-no-repeat bg-cover bg-fixed opacity-50 -z-20">
         </div>
-      </StoreProvider>
+        <div className="block flex-col">
+            <Header />
+        </div>
+        <div className="flex flex-row h-full w-full">
+          <div className="flex w-64">
+              <Sidebar />
+          </div>
+          <div className="flex pl-10">
+              {children}
+          </div>
+        </div>
+      </div>
     );
   }
-  

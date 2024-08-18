@@ -10,34 +10,36 @@ const Sidebar: React.FC = () => {
   const router = useRouter();
   //const userData = useAppSelector((state) => state.user);
   //const dispatch = useAppDispatch();
-  const [selectedItem, setSelectedItem] = useState(false);
   const [menuItem, setMenuItem] = useState<any>([]);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(
+    sessionStorage.getItem('selectedItem') || '/'
+  );
 
   const toggleSubMenu = () => {
     setSubMenuOpen(!subMenuOpen);
   };
+
+  useEffect(() => {
+    sessionStorage.setItem('selectedItem', selectedItem);
+  }, [selectedItem]);
 
   const handleLogout = () => {
     deleteCookie("token");
     router.push("/");
   };
 
-  const handleClick = () => {
-    setSelectedItem(!selectedItem);
-  };
-
   useEffect (() => {
-    if (menuItem.length == 0){
     let menu = localStorage.getItem("menuData")
-    if (menu) {setMenuItem(JSON.parse(menu))}
-      
+    if (menu) {
+      setMenuItem(JSON.parse(menu))
     }
   },[])
 
   //console.log(userData);
   console.log('A');
   console.log(menuItem.length);
+  console.log(selectedItem);
 
   return (
     <div>
@@ -96,11 +98,14 @@ const Sidebar: React.FC = () => {
                             <div>
                               <Link
                                 href={feature.subMenuRoute}
-                                onClick={toggleSubMenu}
+                                onClick={(e) => {
+                                  setSelectedItem(feature.subMenuRoute);
+                                  return false;
+                                }}
                                 key={feature.subMenu}
                                 className="font-normal"
                               >
-                                <div className="flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group">
+                                <div className={`flex items-center py-2.5 px-4 ${selectedItem == feature.subMenuRoute && 'bg-sage bg-opacity-50'} rounded transition duration-300 hover:bg-gray-4 group`}>
                                   <img
                                     className="mr-2 hidden group-hover:block"
                                     //src={`/icons/sidebar/hover/${menu.group}.svg`}
@@ -113,7 +118,7 @@ const Sidebar: React.FC = () => {
                                     src={`/icons/sidebar/default/dashboard.svg`}
                                     alt={feature.subMenu}
                                   />
-                                  <span className="ml-2 transition-opacity duration-300 delay-200 text-sm text-black group-hover:font-bold">
+                                  <span className={`ml-2 transition-opacity duration-300 delay-200 text-sm ${selectedItem == feature.subMenuRoute ? 'text-sage font-bold' : 'text-black'} group-hover:font-bold`}>
                                     {menu.group}
                                   </span>
                                 </div>
@@ -130,8 +135,16 @@ const Sidebar: React.FC = () => {
               <ul>
                 <h3 className="text-gray-1 text-xs mt-5">Account</h3>
                 <div>
-                    <Link href="/profile" onClick={handleClick} className="font-normal">
-                    <div className="flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group">
+                  <Link 
+                    href="/profile" 
+                    onClick={(e) => {
+                      e.preventDefault(); 
+                      setSelectedItem('/profile');
+                      window.location.href = '/profile';
+                    }} 
+                    className="font-normal"
+                  >
+                    <div className={`flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/profile' && 'bg-sage bg-opacity-50'}`}>
                       <img
                           className="mr-2 block group-hover:hidden"
                           src="/icons/sidebar/default/profile.svg"
@@ -142,13 +155,20 @@ const Sidebar: React.FC = () => {
                           src="/icons/sidebar/hover/profile.svg"
                           alt="Profile Hover"
                         />
-                        <span className="ml-2 transition-opacity duration-300 delay-200 text-sm text-black group-hover:font-bold">
+                        <span className={`ml-2 transition-opacity duration-300 delay-200 text-sm group-hover:font-bold ${selectedItem == '/profile' ? "text-sage font-bold" : "text-black"}`}>
                           Profile
                         </span>
                       </div>
-                    </Link>
-                  <Link href="/messages" onClick={handleClick} className="font-normal">
-                    <div className="flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group">
+                  </Link>
+                  <Link 
+                    href="/messages" 
+                    onClick={(e) => {
+                      setSelectedItem('/messages');
+                      return false;
+                    }} 
+                    className="font-normal"
+                  >
+                    <div className={`flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/messages' && 'bg-sage bg-opacity-50'}`}>
                       <img
                         className="mr-2 block group-hover:hidden"
                         src="/icons/sidebar/default/message.svg"
@@ -159,7 +179,7 @@ const Sidebar: React.FC = () => {
                         src="/icons/sidebar/hover/message.svg"
                         alt="Messages Hover"
                       />
-                      <span className="ml-2 transition-opacity duration-300 delay-200 text-sm text-black group-hover:font-bold">
+                      <span className={`ml-2 transition-opacity duration-300 delay-200 text-sm ${selectedItem == '/messages' ? 'text-sage font-bold' : 'text-black'} group-hover:font-bold`}>
                         Messages
                       </span>
                     </div>
@@ -170,8 +190,16 @@ const Sidebar: React.FC = () => {
             <div className="flex flex-col justify mb-0 pb-0 border-t-2 bottom-3 w-48">
               <ul>
                 <div>
-                  <Link href="/settings" onClick={handleClick} className="font-normal">
-                    <div className="flex items-center py-2.5 px-4 mt-5 rounded transition duration-300 hover:bg-gray-4 group">
+                  <Link
+                    href="/settings"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedItem('/settings');
+                      window.location.href = '/settings';
+                    }}
+                    className="font-normal"
+                  >
+                    <div className={`flex items-center py-2.5 px-4 mt-5 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/settings' && 'bg-sage bg-opacity-50'}`}>
                       <img
                         className="mr-2 block group-hover:hidden"
                         src="/icons/sidebar/default/setting.svg"
@@ -182,7 +210,7 @@ const Sidebar: React.FC = () => {
                         src="/icons/sidebar/hover/setting.svg"
                         alt="Settings Hover"
                       />
-                      <span className="ml-2 transition-opacity duration-300 delay-200 text-sm text-black group-hover:font-bold">
+                      <span className={`ml-2 transition-opacity duration-300 delay-200 text-sm ${selectedItem == '/settings' ? 'text-sage font-bold' : 'text-black'} group-hover:font-bold`}>
                         Settings
                       </span>
                     </div>
