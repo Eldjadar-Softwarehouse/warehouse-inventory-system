@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
   };
 
   const handleClick = () => {
-    setSelectedItem(!selectIedtem);
+    setSelectedItem(!selectedItem);
   };
 
   useEffect (() => {
