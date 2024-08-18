@@ -65,7 +65,7 @@ const LoginPage = () => {
 
   return (
     <div className="w-screen h-screen flex flex-row overflow-hidden">
-      <div className="w-full h-screen flex flex-col justify-between bg-[url('/images/bg-login.png')] bg-no-repeat bg-cover">
+      <div className="fixed w-full h-screen flex flex-col justify-between bg-[url('/images/bg-login.png')] bg-no-repeat bg-cover">
         <div className="flex">
           <img
             className="px-4 md:px-16 lg:px-16 2xl:px-16 py-4"

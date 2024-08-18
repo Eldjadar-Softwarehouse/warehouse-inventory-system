@@ -9,13 +9,13 @@ export default function Layout({
   }>) {
     return (
       <div className="flex">
-          <div className="flex-1/4 w-64">
+          <div className="flex w-1/4">
               <Sidebar />
           </div>
-          <div className="flex-1/4 w-64">
+          <div className="flex w-1/5">
               <Submenu />
           </div>
-          <div className="flex-2/4 w-2/4">
+          <div className="flex w-3/4">
               {children}
           </div>
       </div>

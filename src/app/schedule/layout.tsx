@@ -1,6 +1,6 @@
 import React from 'react'
 import StoreProvider from '@/lib/StoreProvider'
-import Sidebar from '@/components/sidebar/Sidebar'
+import Sidebar from '@/components/sidebar/sidebar'
 import { Inter } from 'next/font/google';
 
 const roboto = Inter({
