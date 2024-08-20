@@ -1,5 +1,5 @@
 import React from 'react'
-import Sidebar from '@/components/sidebar/sidebar'
+import Sidebar from '@/components/home/sidebar'
 import Submenu from '@/components/home/submenu';
 import Header from '@/components/home/header';
 

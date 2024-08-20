@@ -1,4 +1,4 @@
-import Sidebar from '@/components/sidebar/sidebar'
+import Sidebar from '@/components/home/sidebar'
 import React from 'react'
 
 const Schedule = () => {
