@@ -36,14 +36,14 @@ const Sidebar: React.FC = () => {
     }
   },[])
 
-  //console.log(userData);
-  console.log('A');
-  console.log(menuItem.length);
-  console.log(selectedItem);
+  // console.log(userData);
+  // console.log('A');
+  // console.log(menuItem.length);
+  // console.log(selectedItem);
 
   return (
     <div>
-      <div className="fixed top-0 left-0 h-screen overflow-y-scroll overflow-x-hidden w-64 p-4 bg-gray-6">
+      <div className="fixed top-0 left-0 h-screen overflow-y-scroll overflow-x-hidden w-58 p-4 bg-gray-6">
         <div>
           <div>
             <img
@@ -53,7 +53,7 @@ const Sidebar: React.FC = () => {
             />  
           </div>
           <div className="mb-10">
-            <h3 className="text-gray-1 text-xs">Menu</h3>
+            <h3 className="text-gray-1 text-xs pb-1">Menu</h3>
             <ul>
                 {/* {menuItem.map((menu: any) => (
                   <Link href="">
@@ -105,18 +105,18 @@ const Sidebar: React.FC = () => {
                                 key={feature.subMenu}
                                 className="font-normal"
                               >
-                                <div className={`flex items-center py-2.5 px-4 ${selectedItem == feature.subMenuRoute && 'bg-sage bg-opacity-50'} rounded transition duration-300 hover:bg-gray-4 group`}>
-                                  <img
-                                    className="mr-2 hidden group-hover:block"
-                                    //src={`/icons/sidebar/hover/${menu.group}.svg`}
-                                  src={`/icons/sidebar/hover/dashboard.svg`}
-                                    alt={`${feature.subMenu} hover`}
-                                  />
+                                <div className={`flex items-center py-2.5 px-4 ${selectedItem == feature.subMenuRoute && 'bg-sage bg-opacity-20'} rounded transition duration-300 hover:bg-gray-4 group`}>
                                   <img
                                     className="mr-2 block group-hover:hidden"
                                     //src={`/icons/sidebar/default/${menu.group}.svg`}
-                                    src={`/icons/sidebar/default/dashboard.svg`}
+                                    src={`${selectedItem == feature.subMenuRoute ? "/icons/sidebar/click/dashboard.svg" : "/icons/sidebar/default/dashboard.svg"}`}
                                     alt={feature.subMenu}
+                                  />
+                                  <img
+                                    className="mr-2 hidden group-hover:block"
+                                    //src={`/icons/sidebar/hover/${menu.group}.svg`}
+                                    src={`/icons/sidebar/hover/dashboard.svg`}
+                                    alt={`${feature.subMenu} hover`}
                                   />
                                   <span className={`ml-2 transition-opacity duration-300 delay-200 text-sm ${selectedItem == feature.subMenuRoute ? 'text-sage font-bold' : 'text-black'} group-hover:font-bold`}>
                                     {menu.group}
@@ -133,7 +133,7 @@ const Sidebar: React.FC = () => {
             </div>
             <div className="mt-10 mb-10 border-t-2">
               <ul>
-                <h3 className="text-gray-1 text-xs mt-5">Account</h3>
+                <h3 className="text-gray-1 text-xs mt-5 pb-1">Account</h3>
                 <div>
                   <Link 
                     href="/profile" 
@@ -144,10 +144,10 @@ const Sidebar: React.FC = () => {
                     }} 
                     className="font-normal"
                   >
-                    <div className={`flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/profile' && 'bg-sage bg-opacity-50'}`}>
+                    <div className={`flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/profile' && 'bg-sage bg-opacity-20'}`}>
                       <img
                           className="mr-2 block group-hover:hidden"
-                          src="/icons/sidebar/default/profile.svg"
+                          src={`${selectedItem == '/profile' ? "/icons/sidebar/click/profile.svg" : "/icons/sidebar/default/profile.svg"}`}
                           alt="Profile"
                         />
                         <img
@@ -168,10 +168,10 @@ const Sidebar: React.FC = () => {
                     }} 
                     className="font-normal"
                   >
-                    <div className={`flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/messages' && 'bg-sage bg-opacity-50'}`}>
+                    <div className={`flex items-center py-2.5 px-4 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/messages' && 'bg-sage bg-opacity-20'}`}>
                       <img
                         className="mr-2 block group-hover:hidden"
-                        src="/icons/sidebar/default/message.svg"
+                        src={`${selectedItem == '/messages' ? "/icons/sidebar/click/message.svg" : "/icons/sidebar/default/message.svg"}`}
                         alt="Messages"
                       />
                       <img
@@ -199,10 +199,10 @@ const Sidebar: React.FC = () => {
                     }}
                     className="font-normal"
                   >
-                    <div className={`flex items-center py-2.5 px-4 mt-5 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/settings' && 'bg-sage bg-opacity-50'}`}>
+                    <div className={`flex items-center py-2.5 px-4 mt-5 rounded transition duration-300 hover:bg-gray-4 group ${selectedItem == '/settings' && 'bg-sage bg-opacity-20'}`}>
                       <img
                         className="mr-2 block group-hover:hidden"
-                        src="/icons/sidebar/default/setting.svg"
+                        src={`${selectedItem == '/settings' ? "/icons/sidebar/click/setting.svg" : "/icons/sidebar/default/setting.svg"}`}
                         alt="Settings"
                       />
                       <img

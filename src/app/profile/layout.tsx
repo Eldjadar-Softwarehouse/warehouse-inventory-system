@@ -17,10 +17,10 @@ export default function Layout({
             <Header />
         </div>
         <div className="flex flex-row">
-          <div className="flex w-64">
+          <div className="flex w-58">
               <Sidebar />
           </div>
-          <div className="flex ml-64">
+          <div className="flex ml-58">
               <Submenu />
           </div>
           <div className="flex ml-112">

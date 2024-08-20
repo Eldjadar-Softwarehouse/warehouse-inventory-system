@@ -1,6 +1,5 @@
 import React from 'react'
 import Sidebar from '@/components/home/sidebar'
-import Submenu from '@/components/home/submenu';
 import Header from '@/components/home/header';
 
 export default function Layout({
@@ -17,7 +16,7 @@ export default function Layout({
             <Header />
         </div>
         <div className="flex flex-row h-full w-full">
-          <div className="flex w-64">
+          <div className="flex w-58">
               <Sidebar />
           </div>
           <div className="flex pl-10">

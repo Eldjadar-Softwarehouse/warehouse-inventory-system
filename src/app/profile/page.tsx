@@ -24,7 +24,9 @@ const Profile = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    setFile(file);
+    if (file === null){
+      setFile(file);
+    }
 
     if (file) {
       const reader = new FileReader();
@@ -39,13 +41,11 @@ const Profile = () => {
   return (
     <div className="fixed h-5/6 w-4/6 left-112 right-10 bottom-10 mt-5 border-solid border-2 rounded-3xl bg-white">
       <div className="fixed h-full w-4/6">
-        <button className="w-full -z-50">
         <img
           className="object-cover w-full"
           src="/images/cover-photo.png"
           alt="cover"
         />
-        </button>
       </div>
       <div className="flex">
         <button
@@ -77,7 +77,7 @@ const Profile = () => {
             <span className="font-bold text-sm">
               Your Account Details
             </span>
-            <span className="text-sm text-gray-1">
+            <span className="text-sm text-gray-1 mt-1">
               Update your detail here
             </span>
           </div>
@@ -97,7 +97,7 @@ const Profile = () => {
             <span className="font-bold text-sm">
               Full Name
             </span>
-            <span className="text-sm text-gray-1">
+            <span className="text-sm text-gray-1 mt-1">
               Your Full name will be displayed on your profile
             </span>
           </div>
@@ -115,7 +115,7 @@ const Profile = () => {
             <span className="font-bold text-sm">
               Username
             </span>
-            <span className="text-sm text-gray-1">
+            <span className="text-sm text-gray-1 mt-1">
               Your Username will be displayed on your profile
             </span>
           </div>
@@ -132,7 +132,7 @@ const Profile = () => {
             <span className="font-bold text-sm">
               Email
             </span>
-            <span className="text-sm text-gray-1">
+            <span className="text-sm text-gray-1 mt-1">
               Your Email will be displayed on your profile
             </span>
           </div>
