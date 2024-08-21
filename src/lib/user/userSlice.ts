@@ -233,23 +233,21 @@ export const userSlice = createSlice({
 
         setCookie("token", action.payload.support.token);
 
-        state.menu = action.payload.data.map((item: any) => {
-          return {
-            group: item.group,
-            extended: item.extended,
-            feature: item.feature.map((featureItem: any) => {
-              return {
-                subMenu: featureItem.sub_menu,
-                subMenuRoute: featureItem.sub_menu_route,
-                extended: featureItem.extended,
-                feature: featureItem.feature.map((subFeature: any) => ({
-                  subMenu: subFeature.sub_menu,
-                  subMenuRoute: subFeature.sub_menu_route,
-                })),
-              };
-            }),
-          };
-        });
+        const menuData = action.payload.data.map((item: any) => ({
+          group: item.group,
+          extended: item.extended,
+          feature: item.feature.map((featureItem: any) => ({
+            subMenu: featureItem.sub_menu,
+            subMenuRoute: featureItem.sub_menu_route,
+            extended: featureItem.extended,
+            feature: featureItem.feature.map((subFeature: any) => ({
+              subMenu: subFeature.sub_menu,
+              subMenuRoute: subFeature.sub_menu_route,
+            })),
+          })),
+        }));
+
+        localStorage.setItem("menuData", JSON.stringify(menuData));
       } else if (action.payload.status.status === 0) {
         state.isError = true;
         state.errorMessage = action.payload.status.message[0].errormessage;
