@@ -7,14 +7,19 @@ const Profile = () => {
   const src = "/images/profile-picture.png"
   const [image, setImage] = useState(src);
   const [file, setFile] = useState<File | null>(null);
+  const [isEdit, setIsEdit] = useState(false);
   const [name, setName] = useState("Jacob Ventures");
   const [username, setUsername] = useState("Jacob123");
   const [email, setEmail] = useState("Fahritermi@gmail.co.id");
+  const [tempName, setTempName] = useState(name);
+  const [tempUsername, setTempUsername] = useState(username);
+  const [tempEmail, setTempEmail] = useState(email);
 
-  const handleProfileEdit = ({ name, username, email}: any) => {
-    setName(name);
-    setUsername(username);
-    setEmail(email);
+  const handleSaveButton = () => {
+    setName(tempName);
+    setUsername(tempUsername);
+    setEmail(tempEmail);
+    setIsEdit(false);
   };
 
   const handleUpdateProfilePicture = () => {
@@ -40,7 +45,7 @@ const Profile = () => {
 
   return (
     <div className="fixed h-5/6 w-4/6 left-112 right-10 bottom-10 mt-5 border-solid border-2 rounded-3xl bg-white">
-      <div className="fixed h-full w-4/6">
+      <div className="fixed h-full w-4/6 -z-10">
         <img
           className="object-cover w-full"
           src="/images/cover-photo.png"
@@ -81,17 +86,21 @@ const Profile = () => {
               Update your detail here
             </span>
           </div>
-          <div className="justify-end text-xs">
-            <button
-              className="bg-black text-white hover:bg-gray-1 px-2 py-2 rounded z-10 text-xs"
-              onClick={handleProfileEdit}
-              >
-              Edit Profile
-            </button>
-          </div>
+          <button
+            className={`justify-end bg-black text-white hover:bg-gray-1 px-2 py-2 h-8 w-24 rounded text-xs ${isEdit ? "hidden" : "block"}`}
+            onClick={() => setIsEdit(true)}
+          >
+            Edit Profile
+          </button>
+          <button
+            className={`justify-end bg-black text-white hover:bg-gray-1 px-2 py-2 h-8 w-24 rounded text-xs ${isEdit ? "block" : "hidden"}`}
+            onClick={handleSaveButton}
+          >
+            Save Profile
+          </button>
         </div>
       </div>
-      <div className="ml-10 mt-5 mr-10  border-t-2">
+      <div className="ml-10 mt-5 mr-10 border-t-2">
         <div className="flex w-full mt-5">
           <div className="flex flex-grow flex-col">
             <span className="font-bold text-sm">
@@ -105,8 +114,9 @@ const Profile = () => {
             <input
               type="text"
               className="w-full p-2 pl-3 text-sm border rounded"
-              value={name}
-              onChange={handleProfileEdit}
+              value={tempName}
+              disabled={!isEdit}
+              onChange={(e) => setTempName(e.target.value)}
             />
           </div>
         </div>
@@ -123,7 +133,9 @@ const Profile = () => {
             <input
               type="text"
               className="w-full p-2 pl-3 text-sm border rounded"
-              value={username}
+              value={tempUsername}
+              disabled={!isEdit}
+              onChange={(e) => setTempUsername(e.target.value)}
             />
           </div>
         </div>
@@ -139,8 +151,10 @@ const Profile = () => {
           <div className="justify-end text-xs w-1/2 mt-1">
             <input
               type="text"
-              className="w-full p-2 pl-3 text-sm border rounded"
-              value={email}
+              className={`w-full p-2 pl-3 text-sm border rounded disabled:bg-blue-gray-6`}
+              value={tempEmail}
+              disabled={!isEdit}
+              onChange={(e) => setTempEmail(e.target.value)}
             />
           </div>
         </div>

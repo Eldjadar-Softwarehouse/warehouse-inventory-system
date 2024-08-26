@@ -3,14 +3,15 @@
 import Toogle from '@/components/interaction/toogle';
 import React, { useState } from 'react'
 
-const Profile = () => {
+const Security = () => {
   const [usingGoogleAuth, setUsingGoogleAuth] = useState(false);
-  const [usingPin, setUsingPin] = useState(false);
+  const [usingPin, setUsingPin] = useState(true);
   const [usingOTP, setUsingOTP] = useState(false);
 
   const handleResetButton = () => {
-    const fileInput = document.getElementById('profile-picture-input');
-    fileInput?.click();
+    setUsingGoogleAuth(false);
+    setUsingPin(false);
+    setUsingOTP(false);
   };
 
   const handleGoogleAuthClick = () => {
@@ -60,7 +61,7 @@ const Profile = () => {
               Update your detail here
             </span>
           </div>
-          <Toogle onChange={handleGoogleAuthClick} />
+          <Toogle onChange={handleGoogleAuthClick} value={usingGoogleAuth} />
         </div>
         <div className="flex w-full mt-5">
           <div className="flex flex-grow flex-col">
@@ -71,7 +72,7 @@ const Profile = () => {
               Update your detail here
             </span>
           </div>
-          <Toogle onChange={handlePinClick} />
+          <Toogle onChange={handlePinClick} value={usingPin} />
         </div>
         <div className="flex w-full mt-5">
           <div className="flex flex-grow flex-col">
@@ -82,11 +83,11 @@ const Profile = () => {
               Update your detail here
             </span>
           </div>
-          <Toogle onChange={handleOTPClick} />
+          <Toogle onChange={handleOTPClick} value={usingOTP} />
         </div>
       </div>
     </div>
   )
 }
 
-export default Profile
+export default Security
